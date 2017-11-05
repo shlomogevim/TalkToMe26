@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+          xmlns:tools="http://schemas.android.com/tools"
+          tools:context="com.shlomo.talk20.WheelFragment"
+          android:keepScreenOn="true">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/ivDark"
+            android:alpha="0"
+            android:background="#1b2025"
+            android:visibility="invisible"/>
+
+        <LinearLayout
+            android:layout_width="320dp"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:id="@+id/groupIconTrain"
+            android:layout_gravity="bottom"
+            android:visibility="invisible">
+
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/btnMute1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/mute"
+                android:visibility="visible"/>
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/btnRepeat1"
+                android:background="@drawable/repeat"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:visibility="visible"/>
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/btnExit1"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/exit"
+                android:visibility="visible"/>
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</fragment>
