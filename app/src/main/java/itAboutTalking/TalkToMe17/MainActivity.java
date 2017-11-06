@@ -88,17 +88,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 float d;
                 sumOfDx += dx;
                 d = (float) sumOfDx / (float) widthOfTheScreen;
-                page = Math.round(Math.abs(d)) + 1;
+                if (page!=0) {
+                              page = Math.round(Math.abs(d)) + 1;
+                }
                 btn1.setText(String.valueOf(sumOfDx));
                 btn2.setText(String.valueOf(dx));
 
                 if (Math.abs(dx) <= 4) {
-                    if (page == 1) {
+                    if (page == 1||page==0) {
                         btnRight.setVisibility(View.INVISIBLE);
                     } else {
                         btnRight.setVisibility(View.VISIBLE);
                     }
-                    if (page == maxPage) {
+                    if (page == maxPage||page==0) {
                         btnLeft.setVisibility(View.INVISIBLE);
                     } else {
                         btnLeft.setVisibility(View.VISIBLE);
@@ -187,7 +189,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 mLayoutManager.scrollToPosition(maxPage - 1);
                 arrowAppearance("none");
                 if (maxPage > 1) {
-                    btnLeft.setVisibility(View.VISIBLE);
+                    sumOfDx=0;
+                    page=1;
                     arrowAppearance("left");
                 }
             }
@@ -232,6 +235,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         etEnterWord.setText("");
         arrayOfSentence.clear(); //clear list
         mAdapter.notifyDataSetChanged();
+        arrowAppearance("none");
+        page=0;
     }
 
     public void serachBtn_Onclick(View view) {
@@ -246,6 +251,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             arrayOfSentence.clear(); //clear list
             mAdapter.notifyDataSetChanged();
             activateKeyboard(0);
+            arrowAppearance("none");
+            page=0;
         }
     }
 
@@ -253,8 +260,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (ind == 0) {
             imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+            btnWheel.setVisibility(View.VISIBLE);
         } else {
             imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+            btnWheel.setVisibility(View.INVISIBLE);
         }
     }
 
