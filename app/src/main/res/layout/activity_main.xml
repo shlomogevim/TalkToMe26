@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -67,7 +66,8 @@
                 android:layout_weight="0"
                 android:id="@+id/btnLeftArrow"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/arrow_left"/>
+                android:background="@drawable/arrow_left"
+                android:onClick="arrowLeft_OnClick"/>
             <TextView
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -85,7 +85,8 @@
                 android:layout_height="75dp"
                 android:layout_weight="0"
                 android:id="@+id/btnRightArrow"
-                android:background="@drawable/arrow_right" />
+                android:background="@drawable/arrow_right"
+                android:onClick="arrowRightOnclick"/>
 
         </LinearLayout>
         <Button

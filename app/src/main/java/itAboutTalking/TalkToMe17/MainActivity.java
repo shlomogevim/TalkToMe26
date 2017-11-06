@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         btnWheelActivation();
         etEnterWord.setOnTouchListener(this);
         buttonActivate();
-        demiAction();
+       // demiAction();
         activateBtn();
         makeOnScroll();
     }
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         mRecyclerView = (RecyclerView) findViewById(R.id.recycle_view);
         mRecyclerView.setHasFixedSize(true);
         //   mLayoutManager= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        mLayoutManager = new Speedy(this, LinearLayoutManager.HORIZONTAL, true);
+        mLayoutManager = new Speedy(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(mRecyclerView);
@@ -348,4 +348,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
 
+    public void arrowLeft_OnClick(View view) {
+    }
+
+    public void arrowRightOnclick(View view) {
+    }
 }
