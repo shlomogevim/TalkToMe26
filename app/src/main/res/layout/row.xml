@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="200dp"
+             android:background="@drawable/rectangle"
+             android:layout_marginRight="5dp"
+             android:layout_marginLeft="5dp" >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:id="@+id/rowLayout"
+        android:gravity="center_horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20/404"
+            android:textColor="@color/textColor"
+            android:textSize="22dp"
+            android:textAllCaps="true"
+            android:id="@+id/numSentence"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="וילאהם סרגונם"
+            android:textColor="@color/textColor"
+            android:textSize="22dp"
+            android:id="@+id/titleSentence"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  הההני הנעע כהנעממי מעיט שנה אישה יפה עבור כל גבר בר מזל"
+            android:gravity="center_horizontal"
+            android:textColor="@color/textColor"
+            android:textSize="20dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/bodySentence"/>
+
+    </LinearLayout>
+
+</LinearLayout>

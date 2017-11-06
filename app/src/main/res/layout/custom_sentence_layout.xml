@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="200dp"
+              android:background="@drawable/rectangle">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20/404"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#aaccc6"
+        android:textSize="20dp"
+        android:layout_marginTop="1dp"
+        android:id="@+id/numSentence"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="וילאהם סרגונם"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#aaccc6"
+        android:textSize="20dp"
+        android:layout_marginTop="1dp"
+        android:id="@+id/titleSentence"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ישנה אישה יפה עבור כל גבר בר מזל"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#aaccc6"
+        android:textSize="20dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/bodySentence"
+        />
+
+</LinearLayout>
