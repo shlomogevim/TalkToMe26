@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="abouttalking.talktome10.MainActivity"
+    tools:context="itAboutTalking.TalkToMe17.MainActivity"
     android:id="@+id/activity_main"
     android:background="@drawable/background">
 
@@ -148,7 +148,7 @@
             android:layout_height="60dp"
             android:id="@+id/continarTrain"
             tools:layout="@layout/fragment_wheel"
-            android:name="abouttalking.talktome10.WheelFragment"
+            android:name="itAboutTalking.TalkToMe17.WheelFragment"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/btnWheel"
           />

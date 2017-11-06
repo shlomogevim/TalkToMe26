@@ -1,4 +1,4 @@
-package abouttalking.talktome10;
+package itAboutTalking.TalkToMe17;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
