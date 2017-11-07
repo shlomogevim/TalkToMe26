@@ -490,43 +490,45 @@ public class Helper extends AppCompatActivity {
         hightOfTheScreen=d.heightPixels;
         return (hightOfTheScreen);
     }
-    public void rekaAnimationHelper(Boolean darkBackOpen,int rate) {
-        ImageView ivDarkBack=(ImageView)((Activity)context). findViewById(R.id.ivDarkBackTrain);
+    public void rekaAnimationHelper(Boolean darkBackOpenPosition,int rate,ImageView ivDarkBack,Button btnWheel) {
+       /* ImageView ivDarkBack=(ImageView)((Activity)context). findViewById(R.id.ivDarkBack);
         ImageView ivDarkBack1 = (ImageView)((Activity)context). findViewById(R.id.ivDarkLittle);
-        Button btnWheel = (Button)((Activity)context). findViewById(R.id.btnWheel);
+        Button btnWheel = (Button)((Activity)context). findViewById(R.id.btnWheel);*/
 
         ivDarkBack.setVisibility(View.VISIBLE);
-        ivDarkBack1.setVisibility(View.VISIBLE);
-        if (darkBackOpen) {
+   //     ivDarkBack1.setVisibility(View.VISIBLE);
+        if (darkBackOpenPosition) {
             ObjectAnimator object1 = ObjectAnimator.ofFloat(btnWheel, View.ROTATION, -250);
             object1.setDuration(rate);
             ObjectAnimator object2 = ObjectAnimator.ofFloat(ivDarkBack, View.ALPHA,0.7f, 0f);
             object2.setDuration(rate);
-            ObjectAnimator object22 = ObjectAnimator.ofFloat(ivDarkBack1, View.ALPHA,0.7f, 0f);
-            object22.setDuration(rate);
+           /* ObjectAnimator object22 = ObjectAnimator.ofFloat(ivDarkBack1, View.ALPHA,0.7f, 0f);
+            object22.setDuration(rate);*/
             AnimatorSet set = new AnimatorSet();
-            set.play(object1).with(object2).with(object22);
+          //  set.play(object1).with(object2).with(object22);
+            set.play(object1).with(object2);
             set.start();
-            //wheelFragment.makeFragmentAnimation62(darkBackOpen);
-            darkBackOpen = false;
+            //wheelFragment.makeFragmentAnimation62(darkBackOpenPosition);
+            darkBackOpenPosition = false;
             // waitWithIt();
         } else {
-            ivDarkBack.setVisibility(View.VISIBLE);
-            ivDarkBack.bringToFront();
-            ivDarkBack1.setVisibility(View.VISIBLE);
-            ivDarkBack1.bringToFront();
+           // ivDarkBack.bringToFront();
+           /* ivDarkBack1.setVisibility(View.VISIBLE);
+            ivDarkBack1.bringToFront();*/
             ObjectAnimator object1 = ObjectAnimator.ofFloat(btnWheel, View.ROTATION, 250);
             object1.setDuration(rate);
             ObjectAnimator object2 = ObjectAnimator.ofFloat(ivDarkBack, View.ALPHA, 0f,0.7f);
             object2.setDuration(rate);
-            ObjectAnimator object22 = ObjectAnimator.ofFloat(ivDarkBack1, View.ALPHA, 0f,0.7f);
-            object22.setDuration(rate);
+           /* ObjectAnimator object22 = ObjectAnimator.ofFloat(ivDarkBack1, View.ALPHA, 0f,0.7f);
+            object22.setDuration(rate);*/
             AnimatorSet set = new AnimatorSet();
-            set.play(object1).with(object2).with(object22);
+         //   set.play(object1).with(object2).with(object22);
+            set.play(object1).with(object2);
             set.start();
-            // wheelFragment.makeFragmentAnimation62(darkBackOpen);
-            darkBackOpen = true;
+            // wheelFragment.makeFragmentAnimation62(darkBackOpenPosition);
+            darkBackOpenPosition = true;
         }
+
     }
   /*  private void tic(int ind){
         if (ind==0){

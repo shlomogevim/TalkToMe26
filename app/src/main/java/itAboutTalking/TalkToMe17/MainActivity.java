@@ -21,42 +21,34 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener, View.OnClickListener {
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
-    ImageView ivDarkBack, ivDarkBack1;
-    Button btnWheel;
-    Button btnLeft, btnRight, btn1, btn2;
+    ImageView ivDarkBack, ivDarkLittle;
+    Button btnWheel,btnLeft, btnRight,btnExit,btnMute, btn1, btn2;
     WheelFragment wheelFragment;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
-    Boolean darkBackOpen = false;
+    Boolean darkBackOpenPosition = false;
     Runnable r;
     Handler h;
-    int widthOfTheScreen;
+    LinearLayout groupIcon;
+    int widthOfTheScreen,heightOfTheScreen;
     int rate = 850;
     Typeface myTypeface4;
     int maxPage = 0;
     Helper helper;
-    EditText etEnterWord;
-    String bigString, newWord;
+    EditText  enterWordBox;
+    String newWord;
     int sumOfDx;
-    String[] rArray, sArray, wArray, arr4Array;
-    String[] sLittleArray, wLittleArray;
-    List<String> sArrayOfList, arr3List;
-    long startTime;
-    Boolean newMovement;
-    int currentPage;
-    Boolean changeLcation = false;
     SnapHelper snapHelper;
     int page;
-
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
@@ -70,14 +62,42 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         init();
         receycrcleIt();
         helper.readData();
-        btnLeft.setVisibility(View.INVISIBLE);
-        // enterWord();
-        btnWheelActivation();
-        etEnterWord.setOnTouchListener(this);
-        buttonActivate();
-       // demiAction();
-        activateBtn();
+        enterWordBox.setOnTouchListener(this);
         makeOnScroll();
+        btnExit.setOnClickListener(this);
+        btnMute.setOnClickListener(this);
+      //  demiAction();
+       }
+
+    public void rekaAnimation() {
+       /* if (!newWord.equals("")) {
+           // ivDarkBack.setVisibility(View.VISIBLE);
+          //  ivDarkLittle.setVisibility(View.VISIBLE);
+         //   helper.rekaAnimationHelper(darkBackOpenPosition,rate,ivDarkBack,btnWheel);*/
+            wheelFragment.makeFragmentAnimation(darkBackOpenPosition,groupIcon,ivDarkBack);
+            if (darkBackOpenPosition) {
+                          waitWithIt();
+                            }
+            darkBackOpenPosition=!darkBackOpenPosition;
+       // }
+    }
+
+
+    public void btnWheel_Onclick(View view) {
+
+        rekaAnimation();
+
+       /* if (newWord!=null) {
+            if (!newWord.equals("")) {
+                rekaAnimation();
+            }
+        }*/
+    }
+
+
+
+    public void ivDarkBack_Onclick(View view) {
+                                             if (darkBackOpenPosition) rekaAnimation();
     }
 
     private void makeOnScroll() {
@@ -110,49 +130,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         });
     }
 
-    private void buttonActivate() {
-        btn1.setOnClickListener(new View.OnClickListener() {
-            int def0, def, def1;
-
-            @Override
-            public void onClick(View v) {
-                btnRight.setVisibility(View.VISIBLE);
-            }
-        });
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRecyclerView.smoothScrollToPosition(maxPage - 1);
-            }
-        });
-    }
-
-
-    private void activateBtn() {
-        btnRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCurrentPage(1);
-
-            }
-        });
-        btnLeft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCurrentPage(-1);
-            }
-        });
-    }
-
-    private void updateCurrentPage(int addPage) {
-        page = page - addPage;
-        page = Math.max(page, 1);
-        page = Math.min(page, maxPage);
-        int page1 = maxPage - page;
-        mRecyclerView.smoothScrollToPosition(page1);
-    }
-
-
     private void demiAction() {
         //  newWord="לא";
         newWord = "שולל";
@@ -161,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         //  newWord="סב";
         arrayOfSentence = helper.setWord(newWord);
         makeRecyeclView();
-        etEnterWord.setText(newWord);
+            enterWordBox.setText(newWord);
     }
 
 
@@ -216,11 +193,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            newWord = String.valueOf(etEnterWord.getText());
+            newWord = String.valueOf(    enterWordBox.getText());
             if (newWord.equals("")) {
                 activateKeyboard(1);
             } else {
-                etEnterWord.setText("");
+                    enterWordBox.setText("");
                 activateKeyboard(1);
                 arrayOfSentence.clear(); //clear list
                 mAdapter.notifyDataSetChanged();
@@ -232,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
 
     public void eraseBtn_onClick(View view) {
-        etEnterWord.setText("");
+            enterWordBox.setText("");
         arrayOfSentence.clear(); //clear list
         mAdapter.notifyDataSetChanged();
         arrowAppearance("none");
@@ -240,14 +217,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     public void serachBtn_Onclick(View view) {
-        newWord = etEnterWord.getText().toString();
+        newWord =     enterWordBox.getText().toString();
         if (!newWord.equals("")) {
             activateKeyboard(0);
             newWord = newWord.trim();
             arrayOfSentence = helper.setWord(newWord);
             makeRecyeclView();
         } else {
-            etEnterWord.setText("");
+                enterWordBox.setText("");
             arrayOfSentence.clear(); //clear list
             mAdapter.notifyDataSetChanged();
             activateKeyboard(0);
@@ -267,41 +244,27 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
 
-
-    private void btnWheelActivation() {
-        btnWheel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rekaAnimation();
-            }
-        });
-
-        ivDarkBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (darkBackOpen) rekaAnimation();
-            }
-        });
-    }
-
-
     private void init() {
         myTypeface4 = Typeface.createFromAsset(getAssets(), "Frank.ttf");
         widthOfTheScreen = helper.getDimOfTheScreenHelperWidth();
+        heightOfTheScreen = helper.getDimOfTheScreenHelperHight();
 
-        etEnterWord = (EditText) findViewById(R.id.enterWord);
-        etEnterWord.setTextColor(Color.CYAN);
-        etEnterWord.setTypeface(myTypeface4);
+        enterWordBox = (EditText) findViewById(R.id.enterWordBox);
+        enterWordBox.setTextColor(Color.CYAN);
+        enterWordBox.setTypeface(myTypeface4);
 
         btnWheel = (Button) findViewById(R.id.btnWheel);
-        ivDarkBack = (ImageView) findViewById(R.id.ivDarkBackTrain);
-        ivDarkBack1 = (ImageView) findViewById(R.id.ivDarkLittle);
+        ivDarkBack = (ImageView) findViewById(R.id.ivDarkBack);
+        ivDarkLittle = (ImageView) findViewById(R.id.ivDarkLittle);
         btnLeft = (Button) findViewById(R.id.btnLeftArrow);
         btnRight = (Button) findViewById(R.id.btnRightArrow);
         btnRight.setVisibility(View.INVISIBLE);
         btnLeft.setVisibility(View.INVISIBLE);
+        btnExit=(Button)findViewById(R.id.btnExit);
+        btnMute=(Button)findViewById(R.id.btnMute);
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);
+        groupIcon = (LinearLayout)findViewById(R.id.groupIconTrain);
 
         wheelFragment = new WheelFragment();
         fragmentManager = getSupportFragmentManager();
@@ -322,20 +285,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         h.postDelayed(r, rate);
     }
 
-    public void rekaAnimation() {
-        ivDarkBack.setVisibility(View.VISIBLE);
-        ivDarkBack1.setVisibility(View.VISIBLE);
-        if (darkBackOpen) {
-            helper.rekaAnimationHelper(darkBackOpen, rate);
-            wheelFragment.makeFragmentAnimation62(darkBackOpen);
-            darkBackOpen = false;
-            waitWithIt();
-        } else {
-            helper.rekaAnimationHelper(darkBackOpen, rate);
-            wheelFragment.makeFragmentAnimation62(darkBackOpen);
-            darkBackOpen = true;
-        }
-    }
+
 
     public void sayOnClick(View view) {
         promptSpeechInput();
@@ -357,9 +307,58 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
 
+    private void updateCurrentPage(int addPage) {
+        page = page - addPage;
+        page = Math.max(page, 1);
+        page = Math.min(page, maxPage);
+        int page1 = maxPage - page;
+        mRecyclerView.smoothScrollToPosition(page1);
+    }
+
+
     public void arrowLeft_OnClick(View view) {
+        updateCurrentPage(-1);
     }
 
     public void arrowRightOnclick(View view) {
+        updateCurrentPage(1);
+    }
+
+
+
+    public void btn1_Onclick(View view) {
+        float ff=100;
+        enterWordBox.setText("");
+
+         ivDarkBack.setVisibility(View.VISIBLE);
+      //  ivDarkLittle.setVisibility(View.VISIBLE);
+    }
+
+    public void btn2_Onclick(View view) {
+        // ivDarkBack.setVisibility(View.INVISIBLE);
+       // ivDarkLittle.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view==btnExit){
+            rekaAnimation();
+            r = new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                    System.exit(0);
+                }
+            };
+
+            h = new Handler();
+            h.postDelayed(r, rate);
+        } else if (view==btnLeft){
+                               promptSpeechInput();
+
+        }
+
+
+
     }
 }

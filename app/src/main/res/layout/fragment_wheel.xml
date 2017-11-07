@@ -25,7 +25,7 @@
             <Button
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:id="@+id/btnMute1"
+                android:id="@+id/btnMute"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/mute"
@@ -33,7 +33,7 @@
             <Button
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:id="@+id/btnRepeat1"
+                android:id="@+id/btnRepeat"
                 android:background="@drawable/repeat"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
@@ -41,10 +41,10 @@
             <Button
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:id="@+id/btnExit1"
+                android:id="@+id/btnExit"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/exit"
-                android:visibility="visible"/>
+                android:visibility="visible" />
         </LinearLayout>
 
 
