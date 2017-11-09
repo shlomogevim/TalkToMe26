@@ -22,14 +22,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener, View.OnClickListener {
 
-    private final int REQ_CODE_SPEECH_INPUT = 100;
+    private final int REQ_CODE_SPEECH_INPUT = 143;
     ImageView ivDarkBack, ivDarkLittle;
     Button btnWheel,btnLeft, btnRight,btnExit,btnMute, btn1, btn2;
     WheelFragment wheelFragment;
@@ -70,31 +69,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
        }
 
     public void rekaAnimation() {
-       /* if (!newWord.equals("")) {
-           // ivDarkBack.setVisibility(View.VISIBLE);
-          //  ivDarkLittle.setVisibility(View.VISIBLE);
-         //   helper.rekaAnimationHelper(darkBackOpenPosition,rate,ivDarkBack,btnWheel);*/
-            wheelFragment.makeFragmentAnimation(darkBackOpenPosition,groupIcon,ivDarkBack);
+             wheelFragment.makeFragmentAnimation(darkBackOpenPosition,groupIcon,ivDarkBack);
             if (darkBackOpenPosition) {
                           waitWithIt();
                             }
             darkBackOpenPosition=!darkBackOpenPosition;
-       // }
-    }
-
-
-    public void btnWheel_Onclick(View view) {
-
-        rekaAnimation();
-
-       /* if (newWord!=null) {
-            if (!newWord.equals("")) {
-                rekaAnimation();
-            }
-        }*/
-    }
-
-
+      }
 
     public void ivDarkBack_Onclick(View view) {
                                              if (darkBackOpenPosition) rekaAnimation();
@@ -141,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             enterWordBox.setText(newWord);
     }
 
-
     private void receycrcleIt() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycle_view);
         mRecyclerView.setHasFixedSize(true);
@@ -187,7 +166,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             btnLeft.setVisibility(View.INVISIBLE);
             btnRight.setVisibility(View.INVISIBLE);
         }
-
     }
 
     @Override
@@ -203,34 +181,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 mAdapter.notifyDataSetChanged();
             }
         }
-
         return false;
-    }
-
-
-    public void eraseBtn_onClick(View view) {
-            enterWordBox.setText("");
-        arrayOfSentence.clear(); //clear list
-        mAdapter.notifyDataSetChanged();
-        arrowAppearance("none");
-        page=0;
-    }
-
-    public void serachBtn_Onclick(View view) {
-        newWord =     enterWordBox.getText().toString();
-        if (!newWord.equals("")) {
-            activateKeyboard(0);
-            newWord = newWord.trim();
-            arrayOfSentence = helper.setWord(newWord);
-            makeRecyeclView();
-        } else {
-                enterWordBox.setText("");
-            arrayOfSentence.clear(); //clear list
-            mAdapter.notifyDataSetChanged();
-            activateKeyboard(0);
-            arrowAppearance("none");
-            page=0;
-        }
     }
 
     private void activateKeyboard(int ind) {
@@ -269,7 +220,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         wheelFragment = new WheelFragment();
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        // fragmentTransaction.add(R.id.continarTrain,wheelFragment);
         fragmentTransaction.commit();
     }
 
@@ -285,28 +235,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         h.postDelayed(r, rate);
     }
 
-
-
-    public void sayOnClick(View view) {
-        promptSpeechInput();
-    }
-
-    private void promptSpeechInput() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                getString(R.string.speech_prompt));
-        try {
-            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-        } catch (ActivityNotFoundException a) {
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.speech_not_supported),
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void updateCurrentPage(int addPage) {
         page = page - addPage;
         page = Math.max(page, 1);
@@ -314,7 +242,66 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         int page1 = maxPage - page;
         mRecyclerView.smoothScrollToPosition(page1);
     }
+    public void serachBtn_Onclick(View view) {
+        newWord =     enterWordBox.getText().toString();
+        if (!newWord.equals("")) {
+            activateKeyboard(0);
+            newWord = newWord.trim();
+            arrayOfSentence = helper.setWord(newWord);
+            makeRecyeclView();
+        } else {
+            enterWordBox.setText("");
+            arrayOfSentence.clear(); //clear list
+            mAdapter.notifyDataSetChanged();
+            activateKeyboard(0);
+            arrowAppearance("none");
+            page=0;
+        }
+    }
 
+    public void eraseBtn_onClick(View view) {
+        enterWordBox.setText("");
+        arrayOfSentence.clear(); //clear list
+        mAdapter.notifyDataSetChanged();
+        arrowAppearance("none");
+        page=0;
+    }
+
+    public void mic_Onclick(View view) {
+        String st;
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"תגיד משהו");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+                                           enterWordBox.setText("לא נמצא דבר");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQ_CODE_SPEECH_INPUT:{
+                if (resultCode==RESULT_OK && data !=null){
+                                    ArrayList<String> voice=data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                                    enterWordBox.setText(voice.get(0));
+                                    newWord =enterWordBox.getText().toString();
+                                    activateKeyboard(0);
+                                    newWord = newWord.trim();
+                                    arrayOfSentence = helper.setWord(newWord);
+                                    makeRecyeclView();
+                                  }
+                              }
+            }
+        }
+
+    public void btnWheel_Onclick(View view) {
+        rekaAnimation();
+    }
 
     public void arrowLeft_OnClick(View view) {
         updateCurrentPage(-1);
@@ -324,41 +311,35 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         updateCurrentPage(1);
     }
 
-
-
     public void btn1_Onclick(View view) {
-        float ff=100;
-        enterWordBox.setText("");
-
-         ivDarkBack.setVisibility(View.VISIBLE);
-      //  ivDarkLittle.setVisibility(View.VISIBLE);
-    }
+          }
 
     public void btn2_Onclick(View view) {
-        // ivDarkBack.setVisibility(View.INVISIBLE);
-       // ivDarkLittle.setVisibility(View.INVISIBLE);
-    }
+         }
 
     @Override
     public void onClick(View view) {
-        if(view==btnExit){
-            rekaAnimation();
-            r = new Runnable() {
-                @Override
-                public void run() {
-                    finish();
-                    System.exit(0);
-                }
-            };
-
-            h = new Handler();
-            h.postDelayed(r, rate);
-        } else if (view==btnLeft){
-                               promptSpeechInput();
-
+        switch (view.getId()){
+            case R.id.btnExit:
+                    finishIt();
+                break;
         }
 
-
-
     }
+
+    private void finishIt() {
+        rekaAnimation();
+        r = new Runnable() {
+            @Override
+            public void run() {
+                finish();
+                System.exit(0);
+            }
+        };
+
+        h = new Handler();
+        h.postDelayed(r, rate);
+    }
+
+
 }
