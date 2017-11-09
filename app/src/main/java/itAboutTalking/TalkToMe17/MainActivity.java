@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -69,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
        }
 
     public void rekaAnimation() {
+             helper.rekaAnimationHelper(darkBackOpenPosition,rate,ivDarkBack,btnWheel);
              wheelFragment.makeFragmentAnimation(darkBackOpenPosition,groupIcon,ivDarkBack);
             if (darkBackOpenPosition) {
                           waitWithIt();
@@ -242,29 +242,73 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         int page1 = maxPage - page;
         mRecyclerView.smoothScrollToPosition(page1);
     }
+
+    private boolean chk_newWord(){
+        int le;
+        String st="אבגדהוזחטיכלמנסעפצקרשתםןףךץ";
+        boolean bo=true;
+        char ch;
+        newWord = newWord.trim();
+        le=newWord.length();
+        if (le>=2) {
+                    for (int i = 0; i < le; i++) {
+                        ch = newWord.charAt(i);
+                        String s = String.valueOf(ch);
+                        if (!st.contains(s)) {
+                            bo = false;
+                        }
+                    }
+                }else{
+                   bo=false;
+        }
+           return bo;
+        }
+
+
     public void serachBtn_Onclick(View view) {
-        newWord =     enterWordBox.getText().toString();
-        if (!newWord.equals("")) {
+        newWord =  enterWordBox.getText().toString();
+        Boolean bo=chk_newWord();
+        if (bo) {
             activateKeyboard(0);
             newWord = newWord.trim();
             arrayOfSentence = helper.setWord(newWord);
             makeRecyeclView();
         } else {
             enterWordBox.setText("");
-            arrayOfSentence.clear(); //clear list
-            mAdapter.notifyDataSetChanged();
-            activateKeyboard(0);
-            arrowAppearance("none");
-            page=0;
+            if (arrayOfSentence!=null) {
+                arrayOfSentence.clear(); //clear list
+                mAdapter.notifyDataSetChanged();
+                activateKeyboard(0);
+                arrowAppearance("none");
+                page = 0;
+            }
+
         }
-    }
+
+          /*  if (!newWord.equals("")) {
+                activateKeyboard(0);
+                newWord = newWord.trim();
+                arrayOfSentence = helper.setWord(newWord);
+                makeRecyeclView();
+            } else {
+                enterWordBox.setText("");
+                arrayOfSentence.clear(); //clear list
+                mAdapter.notifyDataSetChanged();
+                activateKeyboard(0);
+                arrowAppearance("none");
+                page = 0;
+            }*/
+     }
+
 
     public void eraseBtn_onClick(View view) {
-        enterWordBox.setText("");
-        arrayOfSentence.clear(); //clear list
-        mAdapter.notifyDataSetChanged();
-        arrowAppearance("none");
-        page=0;
+        if (newWord!=null) {
+                        enterWordBox.setText("");
+                        arrayOfSentence.clear(); //clear list
+                        mAdapter.notifyDataSetChanged();
+                        arrowAppearance("none");
+                        page = 0;
+        }
     }
 
     public void mic_Onclick(View view) {
@@ -324,8 +368,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     finishIt();
                 break;
         }
-
-    }
+   }
 
     private void finishIt() {
         rekaAnimation();
@@ -336,7 +379,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 System.exit(0);
             }
         };
-
         h = new Handler();
         h.postDelayed(r, rate);
     }
