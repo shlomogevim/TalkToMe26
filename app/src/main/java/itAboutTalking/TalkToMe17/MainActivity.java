@@ -69,18 +69,22 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         makeOnScroll();
         btnExit.setOnClickListener(this);
         btnMute.setOnClickListener(this);
+         activatAnimatorSet();
+      //  demiAction();
+
+         }
+
+    private void activatAnimatorSet() {
         animatorSetOpen=wheelFragment.makeTrainAndBackAnimation(false,groupIcon,ivDarkBack,btnWheel);
         animatorSetClose=wheelFragment.makeTrainAndBackAnimation(true,groupIcon,ivDarkBack,btnWheel);
-
         groupIcon.setVisibility(View.INVISIBLE);
         ivDarkBack.setVisibility(View.INVISIBLE);
         darkBackOpenPosition=false;
-      //  demiAction();
         animatorSetClose.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                 activateBtn(true);
+                activateBtn(true);
                 darkBackOpenPosition=false;
                 ivDarkBack.setVisibility(View.INVISIBLE);
             }
@@ -89,14 +93,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                 activateBtn(false);
+                activateBtn(false);
                 darkBackOpenPosition=true;
             }
         });
-       }
 
 
-
+    }
 
 
     public void trainAndRekaAnimation() {
@@ -302,17 +305,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         fragmentTransaction.commit();
     }
 
-    public void waitWithIt() {
-        r = new Runnable() {
-            @Override
-            public void run() {
-                ivDarkBack.setVisibility(View.INVISIBLE);
-            }
-        };
-
-        h = new Handler();
-        h.postDelayed(r, rate);
-    }
 
     private void updateCurrentPage(int addPage) {
         page = page - addPage;
@@ -439,6 +431,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 System.exit(0);
             }
         };
+        h = new Handler();
+        h.postDelayed(r, rate);
+    }
+
+    public void waitWithIt() {
+        r = new Runnable() {
+            @Override
+            public void run() {
+                ivDarkBack.setVisibility(View.INVISIBLE);
+            }
+        };
+
         h = new Handler();
         h.postDelayed(r, rate);
     }
