@@ -1,5 +1,8 @@
 package itAboutTalking.TalkToMe17;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -22,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -29,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     private final int REQ_CODE_SPEECH_INPUT = 143;
     ImageView ivDarkBack, ivDarkLittle;
-    Button btnWheel,btnLeft, btnRight,btnExit,btnMute, btn1, btn2;
+    Button btnWheel,btnLeft, btnRight,btnExit,btnMute,btnMic, btn1, btn2;
     WheelFragment wheelFragment;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
     private ArrayList<Sentence> arrayOfSentence;
+    AnimatorSet animatorSetOpen,animatorSetClose;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,20 +69,92 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         makeOnScroll();
         btnExit.setOnClickListener(this);
         btnMute.setOnClickListener(this);
+        animatorSetOpen=wheelFragment.makeTrainAndBackAnimation(false,groupIcon,ivDarkBack,btnWheel);
+        animatorSetClose=wheelFragment.makeTrainAndBackAnimation(true,groupIcon,ivDarkBack,btnWheel);
+
+        groupIcon.setVisibility(View.INVISIBLE);
+        ivDarkBack.setVisibility(View.INVISIBLE);
+        darkBackOpenPosition=false;
       //  demiAction();
+        animatorSetClose.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                 activateBtn(true);
+                darkBackOpenPosition=false;
+                ivDarkBack.setVisibility(View.INVISIBLE);
+            }
+        });
+        animatorSetOpen.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                 activateBtn(false);
+                darkBackOpenPosition=true;
+            }
+        });
        }
 
-    public void rekaAnimation() {
-             helper.rekaAnimationHelper(darkBackOpenPosition,rate,ivDarkBack,btnWheel);
-             wheelFragment.makeFragmentAnimation(darkBackOpenPosition,groupIcon,ivDarkBack);
-            if (darkBackOpenPosition) {
-                          waitWithIt();
-                            }
-            darkBackOpenPosition=!darkBackOpenPosition;
+
+
+
+
+    public void trainAndRekaAnimation() {
+             disableBtns();
+             if (darkBackOpenPosition){
+                 animatorSetClose.start();
+
+             }else{
+                 groupIcon.setVisibility(View.VISIBLE);
+                 ivDarkBack.setVisibility(View.VISIBLE);
+                 animatorSetOpen.start();
+
+             }
       }
 
+    public void btnWheel_Onclick(View view) {
+                                            trainAndRekaAnimation();
+    }
+
+     private void activateBtn(Boolean allBtns) {
+         //  Log.i("state"," bo= "+String.valueOf(bo)+"\n");
+         btnWheel.setEnabled(true);
+         ivDarkBack.setEnabled(true);
+         if (allBtns) {
+             btnMute.setEnabled(true);
+             btnExit.setEnabled(true);
+             btnLeft.setEnabled(true);
+             btnRight.setEnabled(true);
+             btnMic.setEnabled(true);
+             enterWordBox.setEnabled(true);
+             ivDarkBack.setVisibility(View.INVISIBLE);
+         }
+     }
+
+    private void disableBtns(){
+        //  Log.i("state"," bo= "+String.valueOf(bo)+"\n");
+             btnWheel.setEnabled(false);
+            ivDarkBack.setEnabled(false);
+            btnMute.setEnabled(false);
+            btnExit.setEnabled(false);
+            btnLeft.setEnabled(false);
+            btnRight.setEnabled(false);
+            btnMic.setEnabled(false);
+            enterWordBox.setEnabled(false);
+
+    }
+
     public void ivDarkBack_Onclick(View view) {
-                                             if (darkBackOpenPosition) rekaAnimation();
+                                             if (darkBackOpenPosition) trainAndRekaAnimation();
+    }
+
+
+    public void btn1_Onclick(View view) {
+       enterWordBox.setEnabled(true);
+    }
+
+    public void btn2_Onclick(View view) {
+
     }
 
     private void makeOnScroll() {
@@ -91,8 +168,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 if (page!=0) {
                               page = Math.round(Math.abs(d)) + 1;
                 }
-                btn1.setText(String.valueOf(sumOfDx));
-                btn2.setText(String.valueOf(dx));
+              /*  btn1.setText(String.valueOf(sumOfDx));
+                btn2.setText(String.valueOf(dx));*/
 
                 if (Math.abs(dx) <= 4) {
                     if (page == 1||page==0) {
@@ -189,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         if (ind == 0) {
             imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
             btnWheel.setVisibility(View.VISIBLE);
+            btnWheel.bringToFront();
         } else {
             imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
             btnWheel.setVisibility(View.INVISIBLE);
@@ -205,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         enterWordBox.setTypeface(myTypeface4);
 
         btnWheel = (Button) findViewById(R.id.btnWheel);
+        btnMic=(Button) findViewById(R.id.btnMic);
         ivDarkBack = (ImageView) findViewById(R.id.ivDarkBack);
         ivDarkLittle = (ImageView) findViewById(R.id.ivDarkLittle);
         btnLeft = (Button) findViewById(R.id.btnLeftArrow);
@@ -284,20 +363,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
 
         }
-
-          /*  if (!newWord.equals("")) {
-                activateKeyboard(0);
-                newWord = newWord.trim();
-                arrayOfSentence = helper.setWord(newWord);
-                makeRecyeclView();
-            } else {
-                enterWordBox.setText("");
-                arrayOfSentence.clear(); //clear list
-                mAdapter.notifyDataSetChanged();
-                activateKeyboard(0);
-                arrowAppearance("none");
-                page = 0;
-            }*/
      }
 
 
@@ -311,7 +376,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
 
-    public void mic_Onclick(View view) {
+    public void btnMic_Onclick(View view) {
         String st;
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -340,26 +405,21 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     makeRecyeclView();
                                   }
                               }
+
             }
         }
 
-    public void btnWheel_Onclick(View view) {
-        rekaAnimation();
-    }
 
-    public void arrowLeft_OnClick(View view) {
-        updateCurrentPage(-1);
+      public void arrowLeft_OnClick(View view) {
+              updateCurrentPage(-1);
     }
 
     public void arrowRightOnclick(View view) {
+
         updateCurrentPage(1);
     }
 
-    public void btn1_Onclick(View view) {
-          }
 
-    public void btn2_Onclick(View view) {
-         }
 
     @Override
     public void onClick(View view) {
@@ -371,7 +431,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
    }
 
     private void finishIt() {
-        rekaAnimation();
+        //rekaAnimation();
         r = new Runnable() {
             @Override
             public void run() {

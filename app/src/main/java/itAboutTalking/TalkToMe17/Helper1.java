@@ -49,7 +49,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
         }
     }
     private void finishIt() {
-        rekaAnimation();
+        //rekaAnimation();
         r = new Runnable() {
             @Override
             public void run() {
@@ -62,13 +62,13 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
         h.postDelayed(r, rate);
     }
 
-    public void rekaAnimation() {
+   /* public void rekaAnimation() {
         wheelFragment.makeFragmentAnimation(darkBackOpenPosition,groupIcon,ivDarkBack);
         if (darkBackOpenPosition) {
             waitWithIt();
         }
         darkBackOpenPosition=!darkBackOpenPosition;
-    }
+    }*/
     public void waitWithIt() {
         r = new Runnable() {
             @Override
