@@ -1,22 +1,23 @@
 package itAboutTalking.TalkToMe17;
 
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 public class WheelFragment extends Fragment{
-
     int rate=850;
+    /*Button btnWheel,btnLeft, btnRight,btnExit,btnMute,btnMic, btn1, btn2;
+    EditText enterWordBox;
+    AnimatorSet animatorSetOpen,animatorSetClose;
+    LinearLayout groupIcon;
+    ImageView ivDarkBack;
+    Boolean darkBackOpenPosition = false;*/
 
     public WheelFragment() {
+
          }
 
 
@@ -29,6 +30,58 @@ public class WheelFragment extends Fragment{
 
 
         return view;
+    }
+/*
+    public void activatAnimatorSet() {
+        animatorSetOpen=makeTrainAndBackAnimation(false,groupIcon,ivDarkBack,btnWheel);
+        animatorSetClose=makeTrainAndBackAnimation(true,groupIcon,ivDarkBack,btnWheel);
+        groupIcon.setVisibility(View.INVISIBLE);
+        ivDarkBack.setVisibility(View.INVISIBLE);
+        darkBackOpenPosition=false;
+        animatorSetClose.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                activateBtn(true);
+                darkBackOpenPosition=false;
+                ivDarkBack.setVisibility(View.INVISIBLE);
+            }
+        });
+        animatorSetOpen.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                activateBtn(false);
+                darkBackOpenPosition=true;
+            }
+        });
+    }
+    private void activateBtn(Boolean allBtns) {
+        //  Log.i("state"," bo= "+String.valueOf(bo)+"\n");
+        btnWheel.setEnabled(true);
+        ivDarkBack.setEnabled(true);
+        if (allBtns) {
+            btnMute.setEnabled(true);
+            btnExit.setEnabled(true);
+            btnLeft.setEnabled(true);
+            btnRight.setEnabled(true);
+            btnMic.setEnabled(true);
+            enterWordBox.setEnabled(true);
+            ivDarkBack.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void disableBtns(){
+        //  Log.i("state"," bo= "+String.valueOf(bo)+"\n");
+        btnWheel.setEnabled(false);
+        ivDarkBack.setEnabled(false);
+        btnMute.setEnabled(false);
+        btnExit.setEnabled(false);
+        btnLeft.setEnabled(false);
+        btnRight.setEnabled(false);
+        btnMic.setEnabled(false);
+        enterWordBox.setEnabled(false);
+
     }
 
 
@@ -70,5 +123,38 @@ public class WheelFragment extends Fragment{
              btnWheel.bringToFront();
           return animatorSet;
     }
+
+    public void trainAndRekaAnimation() {
+        disableBtns();
+        if (darkBackOpenPosition){
+            animatorSetClose.start();
+
+        }else{
+            groupIcon.setVisibility(View.VISIBLE);
+            ivDarkBack.setVisibility(View.VISIBLE);
+            animatorSetOpen.start();
+
+        }
+    }
+
+    public void btnWheel_Onclick(View view) {
+        trainAndRekaAnimation();
+    }
+
+
+
+    public void ivDarkBack_Onclick(View view) {
+        if (darkBackOpenPosition) trainAndRekaAnimation();
+    }
+
+
+    public void btn1_Onclick(View view) {
+        enterWordBox.setEnabled(true);
+    }
+
+    public void btn2_Onclick(View view) {
+
+    }*/
+
 
 }

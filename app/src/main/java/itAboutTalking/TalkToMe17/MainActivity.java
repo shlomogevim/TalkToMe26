@@ -1,8 +1,5 @@
 package itAboutTalking.TalkToMe17;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -34,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private final int REQ_CODE_SPEECH_INPUT = 143;
     ImageView ivDarkBack, ivDarkLittle;
     Button btnWheel,btnLeft, btnRight,btnExit,btnMute,btnMic, btn1, btn2;
-    WheelFragment wheelFragment;
+   //WheelFragment wheelFragment;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     Boolean darkBackOpenPosition = false;
@@ -46,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     Typeface myTypeface4;
     int maxPage = 0;
     Helper helper;
+    Helper1 helper1;
     EditText  enterWordBox;
     String newWord;
     int sumOfDx;
@@ -55,13 +53,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
     private ArrayList<Sentence> arrayOfSentence;
-    AnimatorSet animatorSetOpen,animatorSetClose;
+  //  AnimatorSet animatorSetOpen,animatorSetClose;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
         helper = new Helper(this);
+        helper1=new Helper1(this);
         init();
         receycrcleIt();
         helper.readData();
@@ -69,12 +68,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         makeOnScroll();
         btnExit.setOnClickListener(this);
         btnMute.setOnClickListener(this);
-         activatAnimatorSet();
+        helper1.activatAnimatorSet();
+       // wheelFragment = new WheelFragment();
+
       //  demiAction();
 
          }
 
-    private void activatAnimatorSet() {
+  /*  private void activatAnimatorSet() {
         animatorSetOpen=wheelFragment.makeTrainAndBackAnimation(false,groupIcon,ivDarkBack,btnWheel);
         animatorSetClose=wheelFragment.makeTrainAndBackAnimation(true,groupIcon,ivDarkBack,btnWheel);
         groupIcon.setVisibility(View.INVISIBLE);
@@ -99,8 +100,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         });
 
 
-    }
+    }*/
 
+/*
 
     public void trainAndRekaAnimation() {
              disableBtns();
@@ -115,49 +117,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
              }
       }
 
-    public void btnWheel_Onclick(View view) {
-                                            trainAndRekaAnimation();
-    }
-
-     private void activateBtn(Boolean allBtns) {
-         //  Log.i("state"," bo= "+String.valueOf(bo)+"\n");
-         btnWheel.setEnabled(true);
-         ivDarkBack.setEnabled(true);
-         if (allBtns) {
-             btnMute.setEnabled(true);
-             btnExit.setEnabled(true);
-             btnLeft.setEnabled(true);
-             btnRight.setEnabled(true);
-             btnMic.setEnabled(true);
-             enterWordBox.setEnabled(true);
-             ivDarkBack.setVisibility(View.INVISIBLE);
-         }
-     }
-
-    private void disableBtns(){
-        //  Log.i("state"," bo= "+String.valueOf(bo)+"\n");
-             btnWheel.setEnabled(false);
-            ivDarkBack.setEnabled(false);
-            btnMute.setEnabled(false);
-            btnExit.setEnabled(false);
-            btnLeft.setEnabled(false);
-            btnRight.setEnabled(false);
-            btnMic.setEnabled(false);
-            enterWordBox.setEnabled(false);
-
-    }
-
-    public void ivDarkBack_Onclick(View view) {
-                                             if (darkBackOpenPosition) trainAndRekaAnimation();
-    }
-
-
-    public void btn1_Onclick(View view) {
+     public void btn1_Onclick(View view) {
        enterWordBox.setEnabled(true);
     }
 
     public void btn2_Onclick(View view) {
 
+    }
+*/
+public void btnWheel_Onclick(View view) {
+                                helper1.trainAndRekaAnimation();
+}
+ public void ivDarkBack_Onclick(View view) {
+                               if (darkBackOpenPosition) helper1.trainAndRekaAnimation();
     }
 
     private void makeOnScroll() {
@@ -299,7 +271,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         btn2 = (Button) findViewById(R.id.btn2);
         groupIcon = (LinearLayout)findViewById(R.id.groupIconTrain);
 
-        wheelFragment = new WheelFragment();
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.commit();
