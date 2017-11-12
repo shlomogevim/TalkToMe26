@@ -5,75 +5,302 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
+import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 /**
  * Created by sh on 09/11/2017.
  */
 
-public class Helper1 extends AppCompatActivity implements View.OnClickListener{
+public class Helper1 extends AppCompatActivity implements View.OnClickListener,View.OnTouchListener {
+    private final int REQ_CODE_SPEECH_INPUT = 143;
     private Context context;
     private int rate = 850;
+    int page, maxPage = 0;
     private Runnable r;
+    int sumOfDx, widthOfTheScreen;
     private Handler h;
-    private   WheelFragment wheelFragment;
+    Typeface myTypeface4;
+    private WheelFragment wheelFragment;
     private android.app.FragmentTransaction fragmentTransaction;
     android.app.FragmentManager fragmentManager;
-    Button btnWheel,btnLeft, btnRight,btnExit,btnMute,btnRepeat,btnMic, btn1, btn2;
+    Button btnWheel, btnLeft, btnRight, btnExit, btnMute, btnRepeat, btnMic, btn1, btn2;
     EditText enterWordBox;
-    AnimatorSet animatorSetOpen,animatorSetClose;
+    AnimatorSet animatorSetOpen, animatorSetClose;
     LinearLayout groupIcon;
     ImageView ivDarkBack;
     Boolean darkBackOpenPosition = false;
     private Activity activity;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
+    private ArrayList<Sentence> arrayOfSentence;
+    private String newWord;
+    private Helper helper;
+    SnapHelper snapHelper;
 
+    /* public Helper1(Context context,String newWord,ArrayList<Sentence> arrayOfSentence) {
+         this.context = context;
+         this.activity=(Activity)context;
+         this.newWord=newWord;
+         this.arrayOfSentence=arrayOfSentence;
+         helper=new Helper(context);
+         init();
+         receycrcleIt();
+     }*/
     public Helper1(Context context) {
         this.context = context;
-        this.activity=(Activity)context;
+        this.activity = (Activity) context;
+        this.newWord = newWord;
+        this.arrayOfSentence = arrayOfSentence;
+        helper = new Helper(context);
+        helper.readData();
         init();
+        receycrcleIt();
+        activatAnimatorSet();
+        makeOnScroll();
     }
+
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btnExit:
-                                animatorSetClose.start();
-                                finishIt();
+                animatorSetClose.start();
+                finishIt();
                 break;
             case R.id.btnWheel:
                 trainAndRekaAnimation();
                 break;
             case R.id.ivDarkBack:
                 trainAndRekaAnimation();
+           /* {
+                if (darkBackOpenPosition) trainAndRekaAnimation();
+            }*/
+                break;
+            case R.id.btnLeftArrow:
+                updateCurrentPage(-1);
+                break;
+            case R.id.btnRightArrow:
+                updateCurrentPage(1);
+                break;
+            case R.id.btnSend:
+                serachNewWord();
+                break;
+            case R.id.btnEraseNewWord:
+                eraseWord();
+                break;
+            case R.id.btnMic:
+                      makeMic();
                 break;
         }
     }
-    public void btn1_Onclick(View view) {
-        enterWordBox.setEnabled(true);
+
+
+
+    public void serachNewWord() {
+        newWord = enterWordBox.getText().toString();
+        Boolean bo = chk_newWord();
+        if (bo) {
+            activateKeyboard(0);
+            newWord = newWord.trim();
+            arrayOfSentence = helper.setWord(newWord);
+            makeRecyeclView();
+        } else {
+            enterWordBox.setText("");
+            if (arrayOfSentence != null) {
+                arrayOfSentence.clear(); //clear list
+                mAdapter.notifyDataSetChanged();
+                activateKeyboard(0);
+                arrowAppearance("none");
+                page = 0;
+            }
+
+        }
     }
 
-    public void btn2_Onclick(View view) {
+    public void serachNewWord1(String word) {
+        newWord = word;
+        Boolean bo = chk_newWord();
+        if (bo) {
+            activateKeyboard(0);
+            newWord = newWord.trim();
+            arrayOfSentence = helper.setWord(newWord);
+            makeRecyeclView();
+        } else {
+            enterWordBox.setText("");
+            if (arrayOfSentence != null) {
+                arrayOfSentence.clear(); //clear list
+                mAdapter.notifyDataSetChanged();
+                activateKeyboard(0);
+                arrowAppearance("none");
+                page = 0;
+            }
 
+        }
     }
 
-     public void activatAnimatorSet() {
-        animatorSetOpen=makeTrainAndBackAnimation(false,groupIcon,ivDarkBack,btnWheel);
-        animatorSetClose=makeTrainAndBackAnimation(true,groupIcon,ivDarkBack,btnWheel);
+    private void receycrcleIt() {
+        mRecyclerView = (RecyclerView) activity.findViewById(R.id.recycle_view);
+        mRecyclerView.setHasFixedSize(true);
+        //   mLayoutManager= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        mLayoutManager = new Speedy(this, LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(mRecyclerView);
+    }
+
+    public void makeRecyeclView() {
+        maxPage = arrayOfSentence.size();
+        mAdapter = new MainAdapter(arrayOfSentence, this, myTypeface4, btnLeft, btnRight);
+        mRecyclerView.setAdapter(mAdapter);
+        locatInTheBeginig();
+    }
+
+    public void activateKeyboard(int ind) {
+        InputMethodManager imm = (InputMethodManager)context. getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (ind == 0) {
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+            btnWheel.setVisibility(View.VISIBLE);
+            btnWheel.bringToFront();
+        } else {
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+      //      btnWheel.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private boolean chk_newWord() {
+        int le;
+        String st = "אבגדהוזחטיכלמנסעפצקרשתםןףךץ";
+        boolean bo = true;
+        char ch;
+        newWord = newWord.trim();
+        le = newWord.length();
+        if (le >= 2) {
+            for (int i = 0; i < le; i++) {
+                ch = newWord.charAt(i);
+                String s = String.valueOf(ch);
+                if (!st.contains(s)) {
+                    bo = false;
+                }
+            }
+        } else {
+            bo = false;
+        }
+        return bo;
+    }
+
+    public void eraseWord() {
+        if (newWord != null) {
+            enterWordBox.setText("");
+            arrayOfSentence.clear(); //clear list
+            mAdapter.notifyDataSetChanged();
+            arrowAppearance("none");
+            page = 0;
+        }
+    }
+
+    public void makeOnScroll() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                float d;
+                sumOfDx += dx;
+                d = (float) sumOfDx / (float) widthOfTheScreen;
+                if (page != 0) {
+                    page = Math.round(Math.abs(d)) + 1;
+                }
+              /*  btn1.setText(String.valueOf(sumOfDx));
+                btn2.setText(String.valueOf(dx));*/
+
+                if (Math.abs(dx) <= 4) {
+                    if (page == 1 || page == 0) {
+                        btnRight.setVisibility(View.INVISIBLE);
+                    } else {
+                        btnRight.setVisibility(View.VISIBLE);
+                    }
+                    if (page == maxPage || page == 0) {
+                        btnLeft.setVisibility(View.INVISIBLE);
+                    } else {
+                        btnLeft.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+    }
+
+    public void locatInTheBeginig() {
+        r = new Runnable() {
+            @Override
+            public void run() {
+                mLayoutManager.scrollToPosition(maxPage - 1);
+                arrowAppearance("none");
+                if (maxPage > 1) {
+                    sumOfDx = 0;
+                    page = 1;
+                    arrowAppearance("left");
+                }
+            }
+        };
+        h = new Handler();
+        h.postDelayed(r, 10);
+    }
+
+    private void arrowAppearance(String st) {
+        if (st.equals("left")) {
+            btnLeft.setVisibility(View.VISIBLE);
+        }
+        if (st.equals("right")) {
+            btnRight.setVisibility(View.VISIBLE);
+        }
+        if (st.equals("none")) {
+            btnLeft.setVisibility(View.INVISIBLE);
+            btnRight.setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+    private void updateCurrentPage(int addPage) {
+        page = page - addPage;
+        page = Math.max(page, 1);
+        page = Math.min(page, maxPage);
+        int page1 = maxPage - page;
+        mRecyclerView.smoothScrollToPosition(page1);
+    }
+
+    public void activatAnimatorSet() {
+        animatorSetOpen = makeTrainAndBackAnimation(false, groupIcon, ivDarkBack, btnWheel);
+        animatorSetClose = makeTrainAndBackAnimation(true, groupIcon, ivDarkBack, btnWheel);
         groupIcon.setVisibility(View.INVISIBLE);
         ivDarkBack.setVisibility(View.INVISIBLE);
-        darkBackOpenPosition=false;
+        darkBackOpenPosition = false;
         animatorSetClose.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 activateBtn(true);
-                darkBackOpenPosition=false;
+                darkBackOpenPosition = false;
                 ivDarkBack.setVisibility(View.INVISIBLE);
             }
         });
@@ -82,10 +309,11 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 activateBtn(false);
-                darkBackOpenPosition=true;
+                darkBackOpenPosition = true;
             }
         });
     }
+
     private void activateBtn(Boolean allBtns) {
         //  Log.i("state"," bo= "+String.valueOf(bo)+"\n");
         btnWheel.setEnabled(true);
@@ -101,7 +329,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    private void disableBtns(){
+    private void disableBtns() {
         //  Log.i("state"," bo= "+String.valueOf(bo)+"\n");
         btnWheel.setEnabled(false);
         ivDarkBack.setEnabled(false);
@@ -113,7 +341,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
         enterWordBox.setEnabled(false);
     }
 
-    public AnimatorSet makeTrainAndBackAnimation(boolean darkBackOpenPosition, LinearLayout groupIcon, ImageView ivDarkBack,Button btnWheel) {
+    public AnimatorSet makeTrainAndBackAnimation(boolean darkBackOpenPosition, LinearLayout groupIcon, ImageView ivDarkBack, Button btnWheel) {
         AnimatorSet animatorSet;
         if (darkBackOpenPosition) {
             ObjectAnimator object0 = ObjectAnimator.ofFloat(btnWheel, View.ROTATION, -250);
@@ -131,7 +359,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
             // animatorSet.play(object1).with(scaleX).with(scaleY).with(objectDark);
         } else {
             // groupIcon.setVisibility(View.VISIBLE);
-             groupIcon.bringToFront();
+            groupIcon.bringToFront();
             ivDarkBack.setVisibility(View.VISIBLE);
             ObjectAnimator object0 = ObjectAnimator.ofFloat(btnWheel, View.ROTATION, 250);
             object0.setDuration(rate);
@@ -153,11 +381,11 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
 
     public void trainAndRekaAnimation() {
         disableBtns();
-        if (ivDarkBack.getVisibility()==View.VISIBLE){
-            darkBackOpenPosition=true;
+        if (ivDarkBack.getVisibility() == View.VISIBLE) {
+            darkBackOpenPosition = true;
             animatorSetClose.start();
-        }else{
-            darkBackOpenPosition=false;
+        } else {
+            darkBackOpenPosition = false;
             groupIcon.setVisibility(View.VISIBLE);
             groupIcon.setEnabled(true);
             btnExit.setEnabled(true);
@@ -174,11 +402,9 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
     }*/
 
 
-
     public void ivDarkBack_Onclick(View view) {
         if (darkBackOpenPosition) trainAndRekaAnimation();
     }
-
 
 
     private void finishIt() {
@@ -194,32 +420,44 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
         h = new Handler();
         h.postDelayed(r, rate);
     }
+
     private void init() {
-        groupIcon = (LinearLayout)activity.findViewById(R.id.groupIconTrain);
-        ivDarkBack = (ImageView)activity. findViewById(R.id.ivDarkBack);
+        myTypeface4 = Typeface.createFromAsset(context.getAssets(), "Frank.ttf");
+        groupIcon = (LinearLayout) activity.findViewById(R.id.groupIconTrain);
+        ivDarkBack = (ImageView) activity.findViewById(R.id.ivDarkBack);
 
-        enterWordBox = (EditText)activity. findViewById(R.id.enterWordBox);
-       /* enterWordBox.setTextColor(Color.CYAN);
-        enterWordBox.setTypeface(myTypeface4);*/
+        enterWordBox = (EditText) activity.findViewById(R.id.enterWordBox);
+        enterWordBox.setTextColor(Color.CYAN);
+        enterWordBox.setTypeface(myTypeface4);
 
-        btnWheel = (Button)activity. findViewById(R.id.btnWheel);
-        btnMic=(Button)activity. findViewById(R.id.btnMic);
-        ivDarkBack = (ImageView)activity. findViewById(R.id.ivDarkBack);
+        btnWheel = (Button) activity.findViewById(R.id.btnWheel);
+        btnMic = (Button) activity.findViewById(R.id.btnMic);
+        ivDarkBack = (ImageView) activity.findViewById(R.id.ivDarkBack);
 
-        btnLeft = (Button)activity. findViewById(R.id.btnLeftArrow);
-        btnRight = (Button)activity. findViewById(R.id.btnRightArrow);
+        btnLeft = (Button) activity.findViewById(R.id.btnLeftArrow);
+        btnRight = (Button) activity.findViewById(R.id.btnRightArrow);
         btnRight.setVisibility(View.INVISIBLE);
         btnLeft.setVisibility(View.INVISIBLE);
-        btnExit=(Button)activity.findViewById(R.id.btnExit);
-        btnMute=(Button)activity.findViewById(R.id.btnMute);
-        btnRepeat=(Button)activity.findViewById(R.id.btnRepeat);
-        btn1 = (Button)activity. findViewById(R.id.btn1);
-        btn2 = (Button)activity. findViewById(R.id.btn2);
+        btnExit = (Button) activity.findViewById(R.id.btnExit);
+        btnMute = (Button) activity.findViewById(R.id.btnMute);
+        btnRepeat = (Button) activity.findViewById(R.id.btnRepeat);
+        btn1 = (Button) activity.findViewById(R.id.btn1);
+        btn2 = (Button) activity.findViewById(R.id.btn2);
 
+        widthOfTheScreen = getDimOfTheScreenHelperWidth();
         wheelFragment = new WheelFragment();
-        fragmentManager =activity.getFragmentManager();           // getSupportFragmentManager();
+
+        fragmentManager = activity.getFragmentManager();           // getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.commit();
+    }
+
+    public int getDimOfTheScreenHelperWidth() {
+        int w = 0;
+        DisplayMetrics d = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(d);
+        widthOfTheScreen = d.widthPixels;
+        return (widthOfTheScreen);
     }
 
 
@@ -241,4 +479,52 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
         h = new Handler();
         h.postDelayed(r, rate);
     }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            newWord = String.valueOf(enterWordBox.getText());
+            if (newWord.equals("")) {
+                activateKeyboard(1);
+            } else {
+                enterWordBox.setText("");
+                activateKeyboard(1);
+                arrayOfSentence.clear(); //clear list
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+        return false;
+    }
+    private void makeMic() {
+               Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"תגיד משהו");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+                                           enterWordBox.setText("לא נמצא דבר");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQ_CODE_SPEECH_INPUT:{
+                if (resultCode==RESULT_OK && data !=null){
+                    ArrayList<String> voice=data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    enterWordBox.setText(voice.get(0));
+                    newWord =enterWordBox.getText().toString();
+                    activateKeyboard(0);
+                    newWord = newWord.trim();
+                    arrayOfSentence = helper.setWord(newWord);
+                    makeRecyeclView();
+                }
+            }
+
+        }
+    }
+
 }
