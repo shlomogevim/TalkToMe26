@@ -26,7 +26,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
     private   WheelFragment wheelFragment;
     private android.app.FragmentTransaction fragmentTransaction;
     android.app.FragmentManager fragmentManager;
-    Button btnWheel,btnLeft, btnRight,btnExit,btnMute,btnMic, btn1, btn2;
+    Button btnWheel,btnLeft, btnRight,btnExit,btnMute,btnRepeat,btnMic, btn1, btn2;
     EditText enterWordBox;
     AnimatorSet animatorSetOpen,animatorSetClose;
     LinearLayout groupIcon;
@@ -39,37 +39,30 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
         this.activity=(Activity)context;
         init();
     }
-
-    private void init() {
-        groupIcon = (LinearLayout)activity.findViewById(R.id.groupIconTrain);
-        ivDarkBack = (ImageView)activity. findViewById(R.id.ivDarkBack);
-
-        enterWordBox = (EditText)activity. findViewById(R.id.enterWordBox);
-       /* enterWordBox.setTextColor(Color.CYAN);
-        enterWordBox.setTypeface(myTypeface4);*/
-
-        btnWheel = (Button)activity. findViewById(R.id.btnWheel);
-        btnMic=(Button)activity. findViewById(R.id.btnMic);
-        ivDarkBack = (ImageView)activity. findViewById(R.id.ivDarkBack);
-
-        btnLeft = (Button)activity. findViewById(R.id.btnLeftArrow);
-        btnRight = (Button)activity. findViewById(R.id.btnRightArrow);
-        btnRight.setVisibility(View.INVISIBLE);
-        btnLeft.setVisibility(View.INVISIBLE);
-        btnExit=(Button)activity.findViewById(R.id.btnExit);
-        btnMute=(Button)activity.findViewById(R.id.btnMute);
-        btn1 = (Button)activity. findViewById(R.id.btn1);
-        btn2 = (Button)activity. findViewById(R.id.btn2);
-
-        wheelFragment = new WheelFragment();
-        fragmentManager =activity.getFragmentManager();           // getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.commit();
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btnExit:
+                                animatorSetClose.start();
+                                finishIt();
+                break;
+            case R.id.btnWheel:
+                trainAndRekaAnimation();
+                break;
+            case R.id.ivDarkBack:
+                trainAndRekaAnimation();
+                break;
+        }
+    }
+    public void btn1_Onclick(View view) {
+        enterWordBox.setEnabled(true);
     }
 
+    public void btn2_Onclick(View view) {
 
+    }
 
-    public void activatAnimatorSet() {
+     public void activatAnimatorSet() {
         animatorSetOpen=makeTrainAndBackAnimation(false,groupIcon,ivDarkBack,btnWheel);
         animatorSetClose=makeTrainAndBackAnimation(true,groupIcon,ivDarkBack,btnWheel);
         groupIcon.setVisibility(View.INVISIBLE);
@@ -118,10 +111,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
         btnRight.setEnabled(false);
         btnMic.setEnabled(false);
         enterWordBox.setEnabled(false);
-
     }
-
-
 
     public AnimatorSet makeTrainAndBackAnimation(boolean darkBackOpenPosition, LinearLayout groupIcon, ImageView ivDarkBack,Button btnWheel) {
         AnimatorSet animatorSet;
@@ -141,7 +131,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
             // animatorSet.play(object1).with(scaleX).with(scaleY).with(objectDark);
         } else {
             // groupIcon.setVisibility(View.VISIBLE);
-            // groupIcon.bringToFront();
+             groupIcon.bringToFront();
             ivDarkBack.setVisibility(View.VISIBLE);
             ObjectAnimator object0 = ObjectAnimator.ofFloat(btnWheel, View.ROTATION, 250);
             object0.setDuration(rate);
@@ -163,20 +153,25 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
 
     public void trainAndRekaAnimation() {
         disableBtns();
-        if (darkBackOpenPosition){
+        if (ivDarkBack.getVisibility()==View.VISIBLE){
+            darkBackOpenPosition=true;
             animatorSetClose.start();
-
         }else{
+            darkBackOpenPosition=false;
             groupIcon.setVisibility(View.VISIBLE);
+            groupIcon.setEnabled(true);
+            btnExit.setEnabled(true);
+            btnMute.setEnabled(true);
+            btnRepeat.setEnabled(true);
             ivDarkBack.setVisibility(View.VISIBLE);
             animatorSetOpen.start();
 
         }
     }
 
-    public void btnWheel_Onclick(View view) {
+  /*  public void btnWheel_Onclick(View view) {
         trainAndRekaAnimation();
-    }
+    }*/
 
 
 
@@ -185,29 +180,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
     }
 
 
-    public void btn1_Onclick(View view) {
-        enterWordBox.setEnabled(true);
-    }
 
-    public void btn2_Onclick(View view) {
-
-    }
-
-
-
-
-
-
-
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.btnExit:
-                finishIt();
-                break;
-        }
-    }
     private void finishIt() {
         //rekaAnimation();
         r = new Runnable() {
@@ -221,8 +194,36 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener{
         h = new Handler();
         h.postDelayed(r, rate);
     }
+    private void init() {
+        groupIcon = (LinearLayout)activity.findViewById(R.id.groupIconTrain);
+        ivDarkBack = (ImageView)activity. findViewById(R.id.ivDarkBack);
 
-   /* public void rekaAnimation() {
+        enterWordBox = (EditText)activity. findViewById(R.id.enterWordBox);
+       /* enterWordBox.setTextColor(Color.CYAN);
+        enterWordBox.setTypeface(myTypeface4);*/
+
+        btnWheel = (Button)activity. findViewById(R.id.btnWheel);
+        btnMic=(Button)activity. findViewById(R.id.btnMic);
+        ivDarkBack = (ImageView)activity. findViewById(R.id.ivDarkBack);
+
+        btnLeft = (Button)activity. findViewById(R.id.btnLeftArrow);
+        btnRight = (Button)activity. findViewById(R.id.btnRightArrow);
+        btnRight.setVisibility(View.INVISIBLE);
+        btnLeft.setVisibility(View.INVISIBLE);
+        btnExit=(Button)activity.findViewById(R.id.btnExit);
+        btnMute=(Button)activity.findViewById(R.id.btnMute);
+        btnRepeat=(Button)activity.findViewById(R.id.btnRepeat);
+        btn1 = (Button)activity. findViewById(R.id.btn1);
+        btn2 = (Button)activity. findViewById(R.id.btn2);
+
+        wheelFragment = new WheelFragment();
+        fragmentManager =activity.getFragmentManager();           // getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.commit();
+    }
+
+
+    /* public void rekaAnimation() {
         wheelFragment.makeFragmentAnimation(darkBackOpenPosition,groupIcon,ivDarkBack);
         if (darkBackOpenPosition) {
             waitWithIt();

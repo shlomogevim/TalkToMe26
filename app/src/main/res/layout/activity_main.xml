@@ -120,8 +120,7 @@
             android:layout_alignParentBottom="true"
             android:keepScreenOn="true"
             android:layout_alignParentStart="true"
-            android:elevation="10dp"
-            android:onClick="btnWheel_Onclick"/>
+            android:elevation="10dp"/>
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -130,17 +129,7 @@
             android:background="#1b2025"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:visibility="invisible"
-            android:onClick="ivDarkBack_Onclick"/>
-         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:id="@+id/ivDarkLittle"
-            android:background="#1b2025"
-            android:elevation="10dp"
-            android:layout_alignParentBottom="true"
             android:visibility="invisible"/>
-
         <android.support.v7.widget.RecyclerView
             android:layout_marginTop="350dp"
             android:layout_marginLeft="5dp"
@@ -156,6 +145,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:id="@+id/continarTrain"
+            android:elevation="10dp"
             tools:layout="@layout/fragment_wheel"
             android:name="itAboutTalking.TalkToMe17.WheelFragment"
             android:layout_alignParentBottom="true"
