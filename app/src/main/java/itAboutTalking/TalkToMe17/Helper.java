@@ -39,7 +39,7 @@ public class Helper extends AppCompatActivity {
 
     public Helper(Context context) {
         this.context = context;
-        myTypeface4=Typeface.createFromAsset(context.getAssets(),"Frank.ttf");
+       // myTypeface4=Typeface.createFromAsset(context.getAssets(),"Frank.ttf");
 
     }
 

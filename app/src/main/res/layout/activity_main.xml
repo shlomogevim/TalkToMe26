@@ -17,7 +17,54 @@
             android:layout_centerHorizontal="true"
             android:elevation="-1dp"
             android:alpha="0.5"
+            android:visibility="invisible"
             android:onClick="btnMic_Onclick"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:textColor="#e7eaed"
+            android:textColorHint="#f5f3f2"
+            android:textSize="25dp"
+            android:hint="@string/edittext_hint"
+            android:textAllCaps="false"
+            android:id="@+id/etNumOfFont"
+            android:gravity="center"
+            android:cursorVisible="false"/>
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:textColor="#e7eaed"
+            android:textColorHint="#f7f3f3"
+            android:textSize="25dp"
+            android:hint="@string/edittext_hint1"
+            android:textAllCaps="false"
+            android:id="@+id/etNumOfColor"
+            android:gravity="center"
+            android:cursorVisible="false"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:textAllCaps="false"
+            android:hint="Submit "
+            android:id="@+id/btnSubmit"
+            android:gravity="center"
+            android:textColor="#e7eaed"
+            android:textColorHint="#f7f3f3"
+            android:textSize="20dp"
+            android:background="@null"
+            android:onClick="submit_Onclick"/>
+
+
+
+    </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"

@@ -51,6 +51,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
     LinearLayout groupIcon;
     ImageView ivDarkBack;
     Boolean darkBackOpenPosition = false;
+    private String myColor;
     private Activity activity;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -69,11 +70,9 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
          init();
          receycrcleIt();
      }*/
-    public Helper1(Context context) {
+    public Helper1(Context context,int ind) {
         this.context = context;
         this.activity = (Activity) context;
-        this.newWord = newWord;
-        this.arrayOfSentence = arrayOfSentence;
         helper = new Helper(context);
         helper.readData();
         init();
@@ -135,7 +134,6 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
                 arrowAppearance("none");
                 page = 0;
             }
-
         }
     }
 
@@ -167,14 +165,19 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
         mLayoutManager = new Speedy(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         snapHelper = new LinearSnapHelper();
-        snapHelper.attachToRecyclerView(mRecyclerView);
+        try {
+            snapHelper.attachToRecyclerView(mRecyclerView);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
     }
 
     public void makeRecyeclView() {
         maxPage = arrayOfSentence.size();
-        mAdapter = new MainAdapter(arrayOfSentence, this, myTypeface4, btnLeft, btnRight);
+        mAdapter = new MainAdapter(arrayOfSentence, this, myTypeface4,myColor, btnLeft, btnRight);
         mRecyclerView.setAdapter(mAdapter);
         locatInTheBeginig();
+        enterWordBox.setText(newWord);
     }
 
     public void activateKeyboard(int ind) {
@@ -317,6 +320,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
     private void activateBtn(Boolean allBtns) {
         //  Log.i("state"," bo= "+String.valueOf(bo)+"\n");
         btnWheel.setEnabled(true);
+        btnExit.setEnabled(true);
         ivDarkBack.setEnabled(true);
         if (allBtns) {
             btnMute.setEnabled(true);
@@ -420,6 +424,147 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
         h = new Handler();
         h.postDelayed(r, rate);
     }
+    public void makeSetupChange(int fontIndecator,String colorString){
+       Boolean bo=true;
+
+        if (fontIndecator>=0){
+            String fontSt=setOtherFont(fontIndecator);
+            if (!fontSt.equals("") && fontSt != null) {
+                myTypeface4 = Typeface.createFromAsset(context.getAssets(), fontSt);
+                enterWordBox.setTypeface(myTypeface4);
+            }
+        }
+        if (!colorString.equals("")){
+                            myColor="#"+colorString;
+            try {
+                enterWordBox.setTextColor(Color.parseColor(myColor));
+            } catch (Exception e) {
+                e.printStackTrace();
+                bo=false;
+                activateKeyboard(0);
+            }
+        }
+      if (bo) {
+          activateKeyboard(0);
+          makeRecyeclView();
+      }
+    }
+
+    public String setOtherFont(int fontIndicator) {
+           String fontSt="";
+        switch (fontIndicator) {
+            case 0:
+                fontSt = "Frank.ttf";
+                break;
+            case 1:
+                fontSt = "Abraham.ttf";
+                break;
+            case 2:
+                fontSt = "aharoni.ttf";
+                break;
+            case 3:
+                fontSt = "Alef.ttf";
+                break;
+            case 4:
+                fontSt = "AmaticaSC.ttf";
+                break;
+            case 5:
+                fontSt = "anka.ttf";
+                break;
+            case 6:
+                fontSt = "Assistant.ttf";
+                break;
+            case 7:
+                fontSt = "carmela.ttf";
+                break;
+            case 8:
+                fontSt = "carmelitregular.ttf";
+                break;
+            case 9:
+                fontSt = "DavidLibre-Regular.ttf";
+                break;
+            case 10:
+                fontSt = "dorianclm-book-webfont.ttf";
+                break;
+            case 11:
+                fontSt = "dragon-webfont.ttf";
+                break;
+            case 12:
+                fontSt = "drugulinclm-bolditalic-webfont.ttf";
+                break;
+            case 13:
+                fontSt = "elliniaclm-bolditalic-webfont.ttf";
+                break;
+            case 14:
+                fontSt = "FrankRuhlLibre-Regular.ttf";
+                break;
+            case 15:
+                fontSt = "ganclm_bold-webfont.ttf";
+                break;
+            case 16:
+                fontSt = "gladiaclm-bold-webfont.ttf";
+                break;
+            case 17:
+                fontSt = "hadasimclm-regularoblique-webfont.ttf";
+                break;
+            case 18:
+                fontSt = "Heebo-Regular.ttf";
+                break;
+            case 19:
+                fontSt = "hillelclm-medium-webfont.ttf";
+                break;
+            case 20:
+                fontSt = "horevclm-heavy-webfont.ttf";
+                break;
+            case 21:
+                fontSt = "journalclm-light-webfont.ttf";
+                break;
+            case 22:
+                fontSt = "keteryg-mediumoblique-webfont.ttf";
+                break;
+            case 23:
+                fontSt = "makabiyg-webfont.ttf";
+                break;
+            case 24:
+                fontSt = "migdalfontwin-webfont.ttf";
+                break;
+            case 25:
+                fontSt = "MiriamLibre-Regular.ttf";
+                break;
+            case 26:
+                fontSt = "nachlieliclm-boldoblique-webfont.ttf";
+                break;
+            case 27:
+                fontSt = "nehama-webfont.ttf";
+                break;
+            case 28:
+                fontSt = "noot-aj.ttf";
+                break;
+            case 29:
+                fontSt = "opensanshebrew-extrabolditalic-webfont.ttf";
+                break;
+            case 30:
+                fontSt = "Rubik-Medium.ttf";
+                break;
+            case 31:
+                fontSt = "SecularOne-Regular.ttf";
+                break;
+            case 32:
+                fontSt = "SuezOne-Regular.ttf";
+                break;
+            case 33:
+                fontSt = "trashimclm-bold-webfont.ttf";
+                break;
+            case 34:
+                fontSt = "VarelaRound-Regular.ttf";
+                break;
+            case 35:
+                fontSt = "yehudaclm-bold-webfont.ttf";
+                break;
+
+        }
+     return fontSt;
+   }
 
     private void init() {
         myTypeface4 = Typeface.createFromAsset(context.getAssets(), "Frank.ttf");

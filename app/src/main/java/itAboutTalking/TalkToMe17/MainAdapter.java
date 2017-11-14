@@ -1,6 +1,7 @@
 package itAboutTalking.TalkToMe17;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,10 +19,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
     private ArrayList<Sentence> arrayOfSentence; //items
     Typeface myTypeface4;
     Button btnLeft,btnRight;
+    String myColor;
 
-    public MainAdapter(ArrayList<Sentence> arrayOfSentence,Context context, Typeface myTypeface4,Button btnLeft,Button btnRight) {
+
+    public MainAdapter(ArrayList<Sentence> arrayOfSentence,Context context, Typeface myTypeface4,
+                                                        String myColor,Button btnLeft,Button btnRight) {
         this.arrayOfSentence=arrayOfSentence;
         this.myTypeface4=myTypeface4;
+        this.myColor=myColor;
         this.context=context;
         this.btnLeft=btnLeft;
         this.btnRight=btnRight;
@@ -66,12 +71,17 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
             mTitle= (TextView) itemView.findViewById(R.id.titleSentence);
             mBody= (TextView) itemView.findViewById(R.id.bodySentence);
             rowLayout=(LinearLayout)itemView.findViewById(R.id.rowLayout);
-            mNum.setTypeface(myTypeface4);
-            mTitle.setTypeface(myTypeface4);
-            mBody.setTypeface(myTypeface4);
+            if (myTypeface4!=null) {
+                mNum.setTypeface(myTypeface4);
+                mTitle.setTypeface(myTypeface4);
+                mBody.setTypeface(myTypeface4);
+            }
+            if (myColor!=null) {
+                mNum.setTextColor(Color.parseColor(myColor));
+                mTitle.setTextColor(Color.parseColor(myColor));
+                mBody.setTextColor(Color.parseColor(myColor));
+            }
         }
-
-
 
     }
 

@@ -5,39 +5,81 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity{
 
     private final int REQ_CODE_SPEECH_INPUT = 143;
     Button btn1, btn2;
-    Helper helper;
     Helper1 helper1;
     EditText  enterWordBox;
     String newWord;
+    Button btnSubmite;
+    EditText etFont,etColor;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
         init();
-        helper = new Helper(this);
-        helper1=new Helper1(this);
-
+        helper1=new Helper1(this,0);
         enterWordBox.setOnTouchListener(helper1);
-        //  demiAction();
+        etFont.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction()==MotionEvent.ACTION_DOWN){
+                    etFont.setText("");
+                }
+                return false;
+            }
+        });
+        etColor.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction()==MotionEvent.ACTION_DOWN){
+                    etColor.setText("");
+                }
+                return false;
+            }
+        });
+        demiAction();
+        }
+
+    public void submit_Onclick(View view) {
+        int fontNum;
+        String colorString;
+        String font=etFont.getText().toString();
+        if (!font.equals("")){
+               fontNum=Integer.parseInt(font);
+        }else{
+            fontNum =-1;
+        }
+        if (fontNum>35){
+                         fontNum=-1;
+        }
+         colorString=etColor.getText().toString();
+
+       /* if (!color.equals("")){
+            colorNum=Integer.parseInt(color);
+        }else{
+            colorNum =-1;
+        }*/
+        helper1.makeSetupChange(fontNum,colorString);
      }
 
-    private void demiAction() {
+  private void demiAction() {
         //  newWord="לא";
         newWord = "שולל";
         // newWord="סבתא";
         //  newWord="אישה";
         //  newWord="סב";
+        helper1.eraseWord();
         helper1.serachNewWord1(newWord);
    }
 
@@ -45,6 +87,10 @@ public class MainActivity extends AppCompatActivity  {
         enterWordBox = (EditText) findViewById(R.id.enterWordBox);
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);
+        btnSubmite = (Button) findViewById(R.id.btnSubmit);
+        etFont=(EditText)findViewById(R.id.etNumOfFont);
+        etColor=(EditText)findViewById(R.id.etNumOfColor);
+
    }
 
     public void main_Onclick(View view) {
