@@ -14,28 +14,28 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     Context context;
     private ArrayList<Sentence> arrayOfSentence; //items
     Typeface myTypeface4;
-    Button btnLeft,btnRight;
+    Button btnLeft, btnRight;
     String myColor;
+    Boolean italiceMode;
 
 
-    public MainAdapter(ArrayList<Sentence> arrayOfSentence,Context context, Typeface myTypeface4,
-                                                        String myColor,Button btnLeft,Button btnRight) {
-        this.arrayOfSentence=arrayOfSentence;
-        this.myTypeface4=myTypeface4;
-        this.myColor=myColor;
-        this.context=context;
-        this.btnLeft=btnLeft;
-        this.btnRight=btnRight;
+    public MainAdapter(ArrayList<Sentence> arrayOfSentence, Context context, Typeface myTypeface4,
+                       String myColor, Boolean italiceMode) {
+        this.arrayOfSentence = arrayOfSentence;
+        this.myTypeface4 = myTypeface4;
+        this.myColor = myColor;
+        this.context = context;
+        this.italiceMode = italiceMode;
     }
 
     @Override
     public MainAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-       View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.row,parent,false);
-        ViewHolder vh=new ViewHolder(v);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent, false);
+        ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
@@ -46,8 +46,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
         holder.mTitle.setText(arrayOfSentence.get(position).getTitleSentence());
         holder.mBody.setText(arrayOfSentence.get(position).getBodySentence());
     }
-
-
 
 
     @Override
@@ -61,28 +59,37 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
         return arrayOfSentence.size();
     }
 
-    public class ViewHolder extends  RecyclerView.ViewHolder  {
-        private TextView mNum,mTitle,mBody;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView mNum, mTitle, mBody;
         private LinearLayout rowLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mNum= (TextView) itemView.findViewById(R.id.numSentence);
-            mTitle= (TextView) itemView.findViewById(R.id.titleSentence);
-            mBody= (TextView) itemView.findViewById(R.id.bodySentence);
-            rowLayout=(LinearLayout)itemView.findViewById(R.id.rowLayout);
-            if (myTypeface4!=null) {
-                mNum.setTypeface(myTypeface4);
-                mTitle.setTypeface(myTypeface4);
-                mBody.setTypeface(myTypeface4);
+            mNum = (TextView) itemView.findViewById(R.id.numSentence);
+            mTitle = (TextView) itemView.findViewById(R.id.titleSentence);
+            mBody = (TextView) itemView.findViewById(R.id.bodySentence);
+            rowLayout = (LinearLayout) itemView.findViewById(R.id.rowLayout);
+            if (myTypeface4 != null) {
+                if (italiceMode) {
+                    mNum.setTypeface(myTypeface4, Typeface.ITALIC);
+                    mTitle.setTypeface(myTypeface4, Typeface.ITALIC);
+                    mBody.setTypeface(myTypeface4, Typeface.ITALIC);
+                } else {
+                    mNum.setTypeface(myTypeface4);
+                    mTitle.setTypeface(myTypeface4);
+                    mBody.setTypeface(myTypeface4);
+                }
+                if (myColor != null) {
+                    mNum.setTextColor(Color.parseColor(myColor));
+                    mTitle.setTextColor(Color.parseColor(myColor));
+                    mBody.setTextColor(Color.parseColor(myColor));
+                }
+           /* mNum.setTypeface(null,Typeface.ITALIC);
+            mTitle.setTypeface(null,Typeface.ITALIC);
+            mBody.setTypeface(null,Typeface.ITALIC);*/
             }
-            if (myColor!=null) {
-                mNum.setTextColor(Color.parseColor(myColor));
-                mTitle.setTextColor(Color.parseColor(myColor));
-                mBody.setTextColor(Color.parseColor(myColor));
-            }
+
         }
 
     }
-
 }

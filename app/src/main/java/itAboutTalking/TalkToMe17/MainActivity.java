@@ -13,15 +13,16 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final int REQ_CODE_SPEECH_INPUT = 143;
-    Button btn1, btn2;
+    Button btn1, btn2,btnExit;
     Helper1 helper1;
     EditText  enterWordBox;
     String newWord;
     Button btnSubmite;
     EditText etFont,etColor;
+    Boolean italiceMode=false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity{
         init();
         helper1=new Helper1(this,0);
         enterWordBox.setOnTouchListener(helper1);
+        btn2.setOnClickListener(this);
         etFont.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -46,6 +48,13 @@ public class MainActivity extends AppCompatActivity{
                     etColor.setText("");
                 }
                 return false;
+            }
+        });
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                helper1.animatorSetClose.start();
+                helper1.finishIt();
             }
         });
         demiAction();
@@ -70,8 +79,27 @@ public class MainActivity extends AppCompatActivity{
         }else{
             colorNum =-1;
         }*/
-        helper1.makeSetupChange(fontNum,colorString);
+       italiceMode=false;
+        helper1.makeSetupChange(fontNum,colorString,italiceMode);
      }
+    @Override
+    public void onClick(View v) {
+        int fontNum;
+        String colorString;
+        italiceMode=!italiceMode;
+        String font=etFont.getText().toString();
+        if (!font.equals("")){
+            fontNum=Integer.parseInt(font);
+        }else{
+            fontNum =-1;
+        }
+        if (fontNum>35){
+            fontNum=-1;
+        }
+        colorString=etColor.getText().toString();
+        helper1.makeSetupChange(fontNum,colorString,italiceMode);
+        helper1.activateKeyboard(0);
+    }
 
   private void demiAction() {
         //  newWord="לא";
@@ -87,6 +115,7 @@ public class MainActivity extends AppCompatActivity{
         enterWordBox = (EditText) findViewById(R.id.enterWordBox);
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);
+        btnExit = (Button) findViewById(R.id.btnExit);
         btnSubmite = (Button) findViewById(R.id.btnSubmit);
         etFont=(EditText)findViewById(R.id.etNumOfFont);
         etColor=(EditText)findViewById(R.id.etNumOfColor);
@@ -124,12 +153,6 @@ public class MainActivity extends AppCompatActivity{
                               }
             }
         }
-
-    public void btn1_Onclick(View view) {
-    }
-
-    public void btn2_Onclick(View view) {
-    }
 
 
 

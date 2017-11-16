@@ -106,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:layout_below="@+id/btn2"
+           android:paddingTop="200dp"
             android:layout_alignParentStart="true"
             android:id="@+id/waitingMessage">
             <Button
@@ -146,19 +146,24 @@
             android:textSize="20dp"
             android:textAllCaps="false"
             android:id="@+id/btn1"
-            android:onClick="btn1_Onclick"
-            />
+                />
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:text="2"
+            android:visibility="visible"
+            android:text="Italic"
+            android:textStyle="italic"
+            android:textColor="#edeff2"
             android:textAllCaps="false"
             android:id="@+id/btn2"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="60dp"
             android:textSize="20dp"
-            android:onClick="btn2_Onclick"
-            />
+            android:background="@null" />
+       </LinearLayout>
         <Button
             android:layout_width="60dp"
             android:layout_height="60dp"

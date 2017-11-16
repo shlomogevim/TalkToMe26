@@ -20,7 +20,7 @@
             android:orientation="horizontal"
             android:id="@+id/groupIconTrain"
             android:layout_gravity="bottom"
-            android:visibility="invisible"
+            android:visibility="visible"
             >
 
             <Button

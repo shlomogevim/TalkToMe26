@@ -18,6 +18,7 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -60,6 +61,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
     private String newWord;
     private Helper helper;
     SnapHelper snapHelper;
+    Boolean italiceMode=false;
 
     /* public Helper1(Context context,String newWord,ArrayList<Sentence> arrayOfSentence) {
          this.context = context;
@@ -79,15 +81,16 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
         receycrcleIt();
         activatAnimatorSet();
         makeOnScroll();
+
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnExit:
+           /* case R.id.btnExit:
                 animatorSetClose.start();
                 finishIt();
-                break;
+                break;*/
             case R.id.btnWheel:
                 trainAndRekaAnimation();
                 break;
@@ -112,6 +115,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
             case R.id.btnMic:
                       makeMic();
                 break;
+
         }
     }
 
@@ -154,7 +158,6 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
                 arrowAppearance("none");
                 page = 0;
             }
-
         }
     }
 
@@ -174,7 +177,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
 
     public void makeRecyeclView() {
         maxPage = arrayOfSentence.size();
-        mAdapter = new MainAdapter(arrayOfSentence, this, myTypeface4,myColor, btnLeft, btnRight);
+        mAdapter = new MainAdapter(arrayOfSentence, this, myTypeface4,myColor,italiceMode);
         mRecyclerView.setAdapter(mAdapter);
         locatInTheBeginig();
         enterWordBox.setText(newWord);
@@ -298,7 +301,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
         groupIcon.setVisibility(View.INVISIBLE);
         ivDarkBack.setVisibility(View.INVISIBLE);
         darkBackOpenPosition = false;
-        animatorSetClose.addListener(new AnimatorListenerAdapter() {
+        animatorSetClose.addListener(new AnimatorListenerAdapter() { //when barkScreen finish to close, all the usuall buttom activate;
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
@@ -307,7 +310,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
                 ivDarkBack.setVisibility(View.INVISIBLE);
             }
         });
-        animatorSetOpen.addListener(new AnimatorListenerAdapter() {
+        animatorSetOpen.addListener(new AnimatorListenerAdapter() {  // when darkScreen finish to open, only the train buttom activate;
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
@@ -315,13 +318,21 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
                 darkBackOpenPosition = true;
             }
         });
+        Log.i("state"," btnExit = "+String.valueOf(btnExit.isEnabled()));
     }
 
     private void activateBtn(Boolean allBtns) {
         //  Log.i("state"," bo= "+String.valueOf(bo)+"\n");
         btnWheel.setEnabled(true);
+        groupIcon.setEnabled(true);
         btnExit.setEnabled(true);
-        ivDarkBack.setEnabled(true);
+        btnExit.setVisibility(View.VISIBLE);
+      //  btnExit.setBackgroundColor(Color.blue(1));
+
+     //   ivDarkBack.setVisibility(View.INVISIBLE);
+
+
+       ivDarkBack.setEnabled(true);
         if (allBtns) {
             btnMute.setEnabled(true);
             btnExit.setEnabled(true);
@@ -337,8 +348,8 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
         //  Log.i("state"," bo= "+String.valueOf(bo)+"\n");
         btnWheel.setEnabled(false);
         ivDarkBack.setEnabled(false);
-        btnMute.setEnabled(false);
-        btnExit.setEnabled(false);
+       /* btnMute.setEnabled(false);
+        btnExit.setEnabled(false);*/
         btnLeft.setEnabled(false);
         btnRight.setEnabled(false);
         btnMic.setEnabled(false);
@@ -411,7 +422,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
     }
 
 
-    private void finishIt() {
+    public void finishIt() {
         //rekaAnimation();
         r = new Runnable() {
             @Override
@@ -424,7 +435,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
         h = new Handler();
         h.postDelayed(r, rate);
     }
-    public void makeSetupChange(int fontIndecator,String colorString){
+    public void makeSetupChange(int fontIndecator,String colorString,Boolean italicMode){
        Boolean bo=true;
 
         if (fontIndecator>=0){
@@ -444,14 +455,115 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
                 activateKeyboard(0);
             }
         }
+
       if (bo) {
+          this.italiceMode=italicMode;
           activateKeyboard(0);
           makeRecyeclView();
       }
     }
 
+
+     private void init() {
+        myTypeface4 = Typeface.createFromAsset(context.getAssets(), "Frank.ttf");
+        groupIcon = (LinearLayout) activity.findViewById(R.id.groupIconTrain);
+        ivDarkBack = (ImageView) activity.findViewById(R.id.ivDarkBack);
+
+        enterWordBox = (EditText) activity.findViewById(R.id.enterWordBox);
+        enterWordBox.setTextColor(Color.CYAN);
+        enterWordBox.setTypeface(myTypeface4);
+
+        btnWheel = (Button) activity.findViewById(R.id.btnWheel);
+        btnMic = (Button) activity.findViewById(R.id.btnMic);
+        ivDarkBack = (ImageView) activity.findViewById(R.id.ivDarkBack);
+
+        btnLeft = (Button) activity.findViewById(R.id.btnLeftArrow);
+        btnRight = (Button) activity.findViewById(R.id.btnRightArrow);
+        btnRight.setVisibility(View.INVISIBLE);
+        btnLeft.setVisibility(View.INVISIBLE);
+        btnExit = (Button) activity.findViewById(R.id.btnExit);
+        btnMute = (Button) activity.findViewById(R.id.btnMute);
+        btnRepeat = (Button) activity.findViewById(R.id.btnRepeat);
+        btn1 = (Button) activity.findViewById(R.id.btn1);
+        btn2 = (Button) activity.findViewById(R.id.btn2);
+
+        widthOfTheScreen = getDimOfTheScreenHelperWidth();
+        wheelFragment = new WheelFragment();
+
+        fragmentManager = activity.getFragmentManager();           // getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.commit();
+    }
+
+    public int getDimOfTheScreenHelperWidth() {
+        int w = 0;
+        DisplayMetrics d = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(d);
+        widthOfTheScreen = d.widthPixels;
+        return (widthOfTheScreen);
+    }
+
+
+    public void waitWithIt() {
+        r = new Runnable() {
+            @Override
+            public void run() {
+                ivDarkBack.setVisibility(View.INVISIBLE);
+            }
+        };
+
+        h = new Handler();
+        h.postDelayed(r, rate);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            newWord = String.valueOf(enterWordBox.getText());
+            if (newWord.equals("")) {
+                activateKeyboard(1);
+            } else {
+                enterWordBox.setText("");
+                activateKeyboard(1);
+                arrayOfSentence.clear(); //clear list
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+        return false;
+    }
+    private void makeMic() {
+               Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"תגיד משהו");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+                                           enterWordBox.setText("לא נמצא דבר");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQ_CODE_SPEECH_INPUT:{
+                if (resultCode==RESULT_OK && data !=null){
+                    ArrayList<String> voice=data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    enterWordBox.setText(voice.get(0));
+                    newWord =enterWordBox.getText().toString();
+                    activateKeyboard(0);
+                    newWord = newWord.trim();
+                    arrayOfSentence = helper.setWord(newWord);
+                    makeRecyeclView();
+                }
+            }
+
+        }
+    }
     public String setOtherFont(int fontIndicator) {
-           String fontSt="";
+        String fontSt="";
         switch (fontIndicator) {
             case 0:
                 fontSt = "Frank.ttf";
@@ -563,113 +675,7 @@ public class Helper1 extends AppCompatActivity implements View.OnClickListener,V
                 break;
 
         }
-     return fontSt;
-   }
-
-    private void init() {
-        myTypeface4 = Typeface.createFromAsset(context.getAssets(), "Frank.ttf");
-        groupIcon = (LinearLayout) activity.findViewById(R.id.groupIconTrain);
-        ivDarkBack = (ImageView) activity.findViewById(R.id.ivDarkBack);
-
-        enterWordBox = (EditText) activity.findViewById(R.id.enterWordBox);
-        enterWordBox.setTextColor(Color.CYAN);
-        enterWordBox.setTypeface(myTypeface4);
-
-        btnWheel = (Button) activity.findViewById(R.id.btnWheel);
-        btnMic = (Button) activity.findViewById(R.id.btnMic);
-        ivDarkBack = (ImageView) activity.findViewById(R.id.ivDarkBack);
-
-        btnLeft = (Button) activity.findViewById(R.id.btnLeftArrow);
-        btnRight = (Button) activity.findViewById(R.id.btnRightArrow);
-        btnRight.setVisibility(View.INVISIBLE);
-        btnLeft.setVisibility(View.INVISIBLE);
-        btnExit = (Button) activity.findViewById(R.id.btnExit);
-        btnMute = (Button) activity.findViewById(R.id.btnMute);
-        btnRepeat = (Button) activity.findViewById(R.id.btnRepeat);
-        btn1 = (Button) activity.findViewById(R.id.btn1);
-        btn2 = (Button) activity.findViewById(R.id.btn2);
-
-        widthOfTheScreen = getDimOfTheScreenHelperWidth();
-        wheelFragment = new WheelFragment();
-
-        fragmentManager = activity.getFragmentManager();           // getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.commit();
-    }
-
-    public int getDimOfTheScreenHelperWidth() {
-        int w = 0;
-        DisplayMetrics d = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(d);
-        widthOfTheScreen = d.widthPixels;
-        return (widthOfTheScreen);
-    }
-
-
-    /* public void rekaAnimation() {
-        wheelFragment.makeFragmentAnimation(darkBackOpenPosition,groupIcon,ivDarkBack);
-        if (darkBackOpenPosition) {
-            waitWithIt();
-        }
-        darkBackOpenPosition=!darkBackOpenPosition;
-    }*/
-    public void waitWithIt() {
-        r = new Runnable() {
-            @Override
-            public void run() {
-                ivDarkBack.setVisibility(View.INVISIBLE);
-            }
-        };
-
-        h = new Handler();
-        h.postDelayed(r, rate);
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            newWord = String.valueOf(enterWordBox.getText());
-            if (newWord.equals("")) {
-                activateKeyboard(1);
-            } else {
-                enterWordBox.setText("");
-                activateKeyboard(1);
-                arrayOfSentence.clear(); //clear list
-                mAdapter.notifyDataSetChanged();
-            }
-        }
-        return false;
-    }
-    private void makeMic() {
-               Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"תגיד משהו");
-        try {
-            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-        } catch (ActivityNotFoundException a) {
-                                           enterWordBox.setText("לא נמצא דבר");
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
-            case REQ_CODE_SPEECH_INPUT:{
-                if (resultCode==RESULT_OK && data !=null){
-                    ArrayList<String> voice=data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    enterWordBox.setText(voice.get(0));
-                    newWord =enterWordBox.getText().toString();
-                    activateKeyboard(0);
-                    newWord = newWord.trim();
-                    arrayOfSentence = helper.setWord(newWord);
-                    makeRecyeclView();
-                }
-            }
-
-        }
+        return fontSt;
     }
 
 }
