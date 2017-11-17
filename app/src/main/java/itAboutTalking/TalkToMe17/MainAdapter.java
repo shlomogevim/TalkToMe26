@@ -69,7 +69,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             mTitle = (TextView) itemView.findViewById(R.id.titleSentence);
             mBody = (TextView) itemView.findViewById(R.id.bodySentence);
             rowLayout = (LinearLayout) itemView.findViewById(R.id.rowLayout);
-            if (myTypeface4 != null) {
+            /*if (myTypeface4 != null) {
                 if (italiceMode) {
                     mNum.setTypeface(myTypeface4, Typeface.ITALIC);
                     mTitle.setTypeface(myTypeface4, Typeface.ITALIC);
@@ -78,7 +78,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                     mNum.setTypeface(myTypeface4);
                     mTitle.setTypeface(myTypeface4);
                     mBody.setTypeface(myTypeface4);
-                }
+                }*/
+                  mNum.setTypeface(myTypeface4);
+                  mTitle.setTypeface(myTypeface4);
+                  mBody.setTypeface(myTypeface4, Typeface.ITALIC);
+
                 if (myColor != null) {
                     mNum.setTextColor(Color.parseColor(myColor));
                     mTitle.setTextColor(Color.parseColor(myColor));
@@ -92,4 +96,4 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         }
 
     }
-}
+
